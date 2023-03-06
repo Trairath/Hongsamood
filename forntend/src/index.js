@@ -10,6 +10,10 @@ import Album from "./routes/home";
 
 const router = createBrowserRouter([
   {
+    path: "/",
+    element: <Album />,
+  },
+  {
     path: "/home",
     element: <Album />,
   },
