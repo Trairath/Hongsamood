@@ -1,5 +1,4 @@
-function Books(){
-        const books = [
+const books = [
             {
               type: 'Japan',
               Img: 'https://www.womjapan.com/wp-content/uploads/2019/04/detective-novel-2-691x1024.jpg',
@@ -13,8 +12,7 @@ function Books(){
               title: 'The House Where The Mermaid Sleeps',
               author:'Keigo Higashino (東野圭吾)',
               link:'/Book2'
-            }
-            , 
+            }, 
             {
               type: 'Japan',
               Img: 'https://www.womjapan.com/wp-content/uploads/2019/04/detective-novel-4-704x1024.jpg',
@@ -85,11 +83,6 @@ function Books(){
               author:'ภาคินัย',
               link:'/Book12'
             }
- 
-          ];
-          return( {books}
-            
-          );
-          
-}
-export default Books;
+];
+
+module.exports = books

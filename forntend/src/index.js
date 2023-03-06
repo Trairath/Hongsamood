@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import {createBrowserRouter,RouterProvider,} from "react-router-dom";
 import SignIn from "./routes/signin";
 import SignUp from "./routes/signup";
-import Album from "./routes/home";
+import Home from "./routes/home";
 import Book1 from './page/book1';
 import Book2 from './page/book2';
 import Book3 from './page/book3';
@@ -25,8 +25,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const router = createBrowserRouter([
   {
+    path: "/",
+    element: <Home />,
+  },
+  {
     path: "/home",
-    element: <Album />,
+    element: <Home />,
   },
   {
     path: "/myshelf",
