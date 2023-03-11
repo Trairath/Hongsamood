@@ -7,10 +7,11 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const jwt = require('jsonwebtoken');
 const keytoken = 'webtokenhongsamood'
+const mysql = require('mysql2');
 
 app.use(cors())
+app.use(express.json());
 
-const mysql = require('mysql2');
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'tri',
@@ -70,5 +71,42 @@ app.post('/authen',jsonParser,function(req,res,next){
         res.json({status:'error',message: err.message})
     }
 })
+
+app.get('/myshelf',(req,res)=>{
+  connection.query("SELECT * FROM `myshelf`",(err, result)=>{
+      if(err){
+          console.log(err);
+      }else{
+          res.send(result);
+      }
+  });
+});
+
+app.post('/addmyshelf',(req,res)=>{
+  const name= req.body.name;
+  const namebook= req.body.namebook;
+  const startdate=req.body.startdate;
+
+  connection.query("INSERT INTO myshelf (name,namebook,startdate) VALUES(?,?,?)",[name,namebook,startdate],
+  (err, result)=>{
+    if(err){
+      console.log(err);
+    }else{
+      res.send("add myshelf success")
+    }
+  });
+});
+
+app.delete('/deletemyshelf/:id',(req,res)=>{
+  const id =req.params.id;
+  connection.query("DELETE FROM myshelf WHERE id = ?",id,(err,result)=>{
+    if(err){
+      console.log(err);
+    }else{
+      res.send(result);
+    }
+  })
+})
+
 
 app.listen(5000, () => console.log("Server is Running..."));

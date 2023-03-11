@@ -1,5 +1,7 @@
 import { Button, Card, Row, Col, Container, Navbar, Nav, Jumbotron, NavbarBrand, Image} from 'react-bootstrap';
 import './styles.css';
+import Axios from 'axios'
+import { useState } from 'react';
 
 function Myshelf(){
     const signout = (event) => {
@@ -7,10 +9,45 @@ function Myshelf(){
         localStorage.removeItem('token')
         window.location ='/sign-in'
       }
-      const removeMyshelf = (evt) => {
-        evt.preventDefault();
-        //const data = new FormData(evt.currentTarget);
-      }
+
+    const [Myshelflist, setMyshelf] = useState([]);
+    const getMyshelf = ()=>{
+      Axios.get('http://localhost:5000/myshelf').then((response)=>{
+        setMyshelf(response.data);
+      });
+    }
+
+    const [name,setname] = useState("");
+    const [namebook,setnamebook] = useState("");
+    const [startdate,setstartdate] = useState("");
+
+
+    const addlist = () =>{
+      Axios.post('http://localhost:5000/addmyshelf', {
+        name: name,
+        namebook: namebook,
+        startdate: startdate
+      }).then(() => {
+        setMyshelf([
+          ...Myshelflist,
+        {
+          name: name,
+          namebook: namebook,
+          startdate: startdate
+        }
+        ])
+      })
+    }
+
+    const deletemyshelf = (id) =>{
+      Axios.delete(`http://localhost:5000/deletemyshelf/${id}`).then((response)=>{
+        setMyshelf(
+          Myshelflist.filter((val)=>{
+            return val.id !== id;
+          })
+        )
+      })
+    }
 
     return(
         <div class="container text-center">
@@ -27,26 +64,79 @@ function Myshelf(){
             </div>
           </div>
         </Navbar>
-        <section class="py-5 text-center container">
-            <Card >
-            <div class="container text-center">
-                    <Card style={{width: '18rem'}}>
+
+        <Row>
+        <Col> 
+        <div class="container text-center">
+                    <Card style={{width: '35rem'}}>
                       <Card.Body>
-                        <Card.Img variant="top" src= '' />
-                        <hr/>
-                        <Card.Title>  </Card.Title>
-                        <Card.Text>  </Card.Text>
-                        <Card.Text> <a class='text-muted'>Type :  </a></Card.Text>
-                        <small class='text-muted'>ผู้เเต่ง :  </small>
-                        <hr/>
-                        <Card.Link>
-                          <Button variant='warning' onClick={removeMyshelf} >Remove You book</Button>
-                        </Card.Link>
+                        <div className='mb-3'>
+                          <label htmlFor='wage' className='form-label'>
+                            Name : 
+                          </label>
+                          <input
+                            type='text'
+                            className='form-control'
+                            placeholder='Enter name...'
+                            onChange={(Event)=>{
+                              setname(Event.target.value)
+                            }}>
+                          </input>
+                        </div>
+                        <div className='mb-3'>
+                          <label htmlFor='wage' className='form-label'>
+                            Name book : 
+                          </label>
+                          <input
+                            type='text'
+                            className='form-control'
+                            placeholder='Enter name...'
+                            onChange={(Event)=>{
+                              setnamebook(Event.target.value)
+                            }}>
+                          </input>
+                        </div>
+                        <div className='mb-3'>
+                        <label htmlFor='wage' className='form-label'>
+                          How many days to borrow : 
+                          </label>
+                          <input
+                            type='date'
+                            className='form-control'
+                            onChange={(Event)=>{
+                              setstartdate(Event.target.value)
+                            }}>
+                          </input>
+                          <hr/>
+                         
+                         </div>
+                        <Card.Link><Button variant='warning' onClick={addlist}>Add Your book</Button></Card.Link>
+                       
+                                  
+                        
                      </Card.Body>
                     </Card>
-      </div> 
-            </Card>
-        </section>
+                    </div>
+                  </Col>
+        <Col>
+                    <Button variant='warning' onClick={getMyshelf} >Show Your list</Button>
+                  
+                      {Myshelflist.map((val, key)=>{
+                          return(
+                                <div className='Myshelf'>
+                                  <p name="card-text">Name:{val.name}</p>
+                                  <p name_book="card-text">Name book:{val.namebook}</p>
+                                  <p startdate="card-text">date:{val.startdate}</p>
+                                  <Button className="btn btn-danger" onClick={()=> {deletemyshelf(val.id)}} >Delete</Button>
+                                </div>
+                          )
+                        })}
+                                         
+                        {/* Show tong nee  */}
+                      <hr/>
+      
+                       </Col>
+      </Row>          
         <section class="py-5 text-center container">
         <div class="row"  >
                 <div class="card">
@@ -64,5 +154,6 @@ function Myshelf(){
               </section>
         </div>
     );
+
 }
 export default Myshelf;
